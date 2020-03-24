@@ -1,0 +1,89 @@
+<!doctype html>
+<title>Simple tables</title>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+
+<form method="post">
+<input  id="keywords" name="keywords" type="text" value="">
+<input id="submit" name="submit" type="submit" value="submit">
+</form>
+<div class=page>
+  <h1>Top News & Trends Related to Markets</h1>
+  {% for table in tables %}
+    <h2>{{titles[loop.index]}}</h2>
+    {{ table|safe }}
+  {% endfor %}
+</div>
+<div id="trendsFigure" style="width: 600px;height:400px;">
+</div>
+<script>
+  var data = eval('{{trendsData|safe }}');
+  var time = eval('{{trendsTime|safe }}');
+  console.log(data)
+  console.log(time)
+  var myChart = echarts.init(document.getElementById('trendsFigure'));
+ 
+ // 指定图表的配置项和数据
+ var option = {
+                    title:{
+                      text: 'Trends In Past One Year'
+                    },
+                    color: ['#5793f3', '#86888d'],
+                    tooltip: {
+                        trigger: "axis",
+                        axisPointer: {
+                            type: "shadow"
+                        }
+                    },
+                    legend: {
+                        data: ['web traffic index'],
+                        textStyle: {
+                            color: '#86888d'
+                        }
+                    },
+                    grid: {
+                        left: 10,
+                        right: 10,
+                        bottom: 10,
+                        top: 40,
+                        containLabel: true
+                    },
+                    xAxis: [{
+                        type: 'category',
+                        data: time,
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: "#86888d"
+                            }
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: '#86888d'
+                            }
+                        }
+                    }],
+                    yAxis: [{
+                        type: 'value',
+                        axisLabel: {
+                            show: true,
+                            textStyle: {
+                                color: "#86888d"
+                            }
+                        },
+                        axisLine: {
+                            lineStyle: {
+                                color: '#86888d'
+                            }
+                        }
+                    }],
+                    series: [{
+                        name: 'Web traffic index',
+                        type: 'line',
+                        data: data
+                    }, ]
+                }
+
+ // 使用刚指定的配置项和数据显示图表。
+ myChart.setOption(option);
+</script>
